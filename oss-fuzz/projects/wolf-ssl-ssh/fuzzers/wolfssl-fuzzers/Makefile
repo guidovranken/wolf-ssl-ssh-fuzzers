@@ -26,3 +26,10 @@ fuzzer-ocsp : ocsp.o
 	$(CXX) $(CXXFLAGS) ocsp.o $(FUZZERS_LIBS) -o fuzzer-ocsp
 fuzzer-ocsp-intensity : ocsp.o
 	$(CXX) $(CXXFLAGS) ocsp.o $(FUZZERS_LIBS_GV) -o fuzzer-ocsp-intensity
+
+x509.o : x509.c
+	$(CC) $(FUZZERS_CFLAGS) x509.c -c -o x509.o
+fuzzer-x509 : x509.o
+	$(CXX) $(CXXFLAGS) x509.o $(FUZZERS_LIBS) -o fuzzer-x509
+fuzzer-x509-intensity : x509.o
+	$(CXX) $(CXXFLAGS) x509.o $(FUZZERS_LIBS_GV) -o fuzzer-x509-intensity

@@ -22,10 +22,12 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         make -B fuzzer-misc
         make -B fuzzer-crl
         make -B fuzzer-ocsp
+        make -B fuzzer-x509
 
         cp fuzzer-misc $OUT/fuzzer-wolfssl-misc
         cp fuzzer-crl $OUT/fuzzer-wolfssl-crl
         cp fuzzer-ocsp $OUT/fuzzer-wolfssl-ocsp
+        cp fuzzer-x509 $OUT/fuzzer-wolfssl-x509
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
     export CFLAGS=${CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
@@ -41,7 +43,9 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         make -B fuzzer-misc-intensity
         make -B fuzzer-crl-intensity
         make -B fuzzer-ocsp-intensity
+        make -B fuzzer-x509-intensity
 
         cp fuzzer-misc-intensity $OUT/fuzzer-wolfssl-misc-intensity
         cp fuzzer-crl-intensity $OUT/fuzzer-wolfssl-crl-intensity
         cp fuzzer-ocsp-intensity $OUT/fuzzer-wolfssl-ocsp-intensity
+        cp fuzzer-x509-intensity $OUT/fuzzer-wolfssl-x509-intensity
