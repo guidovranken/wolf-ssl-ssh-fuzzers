@@ -390,8 +390,15 @@ void fuzzer_unset_data(void)
 #endif
 
         for (int i = 1; i < argc; i++) {
-            if ( !strcmp(argv[i], "--randomize-io") ) {
-                enable_io_randomization();
+            if ( argv[i][0] == '-' && argv[i][1] == '-' ) {
+                if ( !strcmp(argv[i], "--randomize-io") ) {
+                    enable_io_randomization();
+                } else if ( !strcmp(argv[i], "--randomize-alloc") ) {
+                    /* Will be handled in fuzzer_post_initialize() */
+                } else {
+                    printf("Invalid parameter: %s\n", argv[i]);
+                    exit(0);
+                }
             }
         }
     }
