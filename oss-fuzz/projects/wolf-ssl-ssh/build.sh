@@ -32,6 +32,10 @@ git config --global user.name "Guido Vranken"
         sed -i 's/ALWAYS_INLINE//g' *.h *.cpp
         sed -i 's/^.*__attribute__((always_inline)).*$//g' FuzzerDefs.h
         sed -i 's/clang++/clang++ -stdlib=libc++/g' Makefile
+        if [[ $CFLAGS = *fsanitize=memory* ]]
+        then
+            sed -i 's/clang++/clang++ -fsanitize=memory/g' Makefile
+        fi
     make -j$(nproc)
     export LIBFUZZER_GV_A_PATH=$(realpath libFuzzer.a)
 
