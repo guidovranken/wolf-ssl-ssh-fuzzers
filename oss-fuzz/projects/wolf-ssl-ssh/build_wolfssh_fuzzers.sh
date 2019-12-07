@@ -64,3 +64,12 @@ export ORIGINAL_CFLAGS="$CFLAGS"
 
         cp fuzzer-client-intensity $OUT/fuzzer-wolfssh-client-intensity
         cp fuzzer-server-intensity $OUT/fuzzer-wolfssh-server-intensity
+
+    # Build wolfSSH fuzzers (allocation guided)
+        cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/wolfssh-fuzzers
+
+        make -B fuzzer-client-allocation
+        make -B fuzzer-server-allocation
+
+        cp fuzzer-client-allocation $OUT/fuzzer-wolfssh-client-allocation
+        cp fuzzer-server-allocation $OUT/fuzzer-wolfssh-server-allocation

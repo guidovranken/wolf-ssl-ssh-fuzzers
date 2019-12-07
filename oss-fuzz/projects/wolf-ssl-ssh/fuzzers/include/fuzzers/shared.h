@@ -383,11 +383,11 @@ void fuzzer_unset_data(void)
     }
 
     void fuzzer_initialize(const int argc, char** argv) {
-        fuzzer_install_memory_allocator();
-
 #if !defined(FUZZER_WOLFSSH)
         wolfSSL_Init();
 #endif
+
+        fuzzer_install_memory_allocator();
 
         for (int i = 1; i < argc; i++) {
             if ( argv[i][0] == '-' && argv[i][1] == '-' ) {

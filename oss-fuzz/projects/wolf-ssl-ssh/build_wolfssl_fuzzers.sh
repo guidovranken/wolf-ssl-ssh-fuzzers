@@ -49,3 +49,16 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp fuzzer-crl-intensity $OUT/fuzzer-wolfssl-crl-intensity
         cp fuzzer-ocsp-intensity $OUT/fuzzer-wolfssl-ocsp-intensity
         cp fuzzer-x509-intensity $OUT/fuzzer-wolfssl-x509-intensity
+
+    # Build wolfSSL fuzzers (allocation guided)
+        cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
+
+        make -B fuzzer-misc-allocation
+        make -B fuzzer-crl-allocation
+        make -B fuzzer-ocsp-allocation
+        make -B fuzzer-x509-allocation
+
+        cp fuzzer-misc-allocation $OUT/fuzzer-wolfssl-misc-allocation
+        cp fuzzer-crl-allocation $OUT/fuzzer-wolfssl-crl-allocation
+        cp fuzzer-ocsp-allocation $OUT/fuzzer-wolfssl-ocsp-allocation
+        cp fuzzer-x509-allocation $OUT/fuzzer-wolfssl-x509-allocation
