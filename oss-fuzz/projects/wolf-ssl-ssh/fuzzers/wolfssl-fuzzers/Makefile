@@ -4,7 +4,7 @@ FUZZERS_CFLAGS = $(CFLAGS) -I .. -I $(FUZZERS_INCLUDE_PATH)
 FUZZERS_LIBS = $(LIBFUZZER_A_PATH) $(WOLFSSL_A_PATH)
 FUZZERS_LIBS_GV = $(LIBFUZZER_GV_A_PATH) $(WOLFSSL_A_PATH)
 
-all : fuzzer-misc fuzzer-misc-intensity fuzzer-misc-allocation fuzzer-crl fuzzer-crl-intensity fuzzer-crl-allocation fuzzer-ocsp fuzzer-ocsp-intensity fuzzer-ocsp-allocation fuzzer-x509 fuzzer-x509-intensity fuzzer-x509-allocation
+all : fuzzer-misc fuzzer-misc-intensity fuzzer-misc-allocation fuzzer-crl fuzzer-crl-intensity fuzzer-crl-allocation fuzzer-ocsp fuzzer-ocsp-intensity fuzzer-ocsp-allocation fuzzer-x509 fuzzer-x509-intensity fuzzer-x509-allocation fuzzer-ocsp-lookup fuzzer-ocsp-lookup-intensity fuzzer-ocsp-lookup-allocation
 
 misc.o : misc.c
 	$(CC) $(FUZZERS_CFLAGS) misc.c -c -o misc.o
@@ -49,3 +49,14 @@ x509-allocation.o : x509.c
 	$(CC) -DFUZZER_ALLOCATION_GUIDED $(FUZZERS_CFLAGS) x509.c -c -o x509-allocation.o
 fuzzer-x509-allocation : x509-allocation.o
 	$(CXX) $(CXXFLAGS) x509-allocation.o $(FUZZERS_LIBS_GV) -o fuzzer-x509-allocation
+
+ocsp-lookup.o : ocsp-lookup.c
+	$(CC) $(FUZZERS_CFLAGS) ocsp-lookup.c -c -o ocsp-lookup.o
+fuzzer-ocsp-lookup : ocsp-lookup.o
+	$(CXX) $(CXXFLAGS) ocsp-lookup.o $(FUZZERS_LIBS) -o fuzzer-ocsp-lookup
+fuzzer-ocsp-lookup-intensity : ocsp-lookup.o
+	$(CXX) $(CXXFLAGS) ocsp-lookup.o $(FUZZERS_LIBS_GV) -o fuzzer-ocsp-lookup-intensity
+ocsp-lookup-allocation.o : ocsp-lookup.c
+	$(CC) -DFUZZER_ALLOCATION_GUIDED $(FUZZERS_CFLAGS) ocsp-lookup.c -c -o ocsp-lookup-allocation.o
+fuzzer-ocsp-lookup-allocation : ocsp-lookup-allocation.o
+	$(CXX) $(CXXFLAGS) ocsp-lookup-allocation.o $(FUZZERS_LIBS_GV) -o fuzzer-ocsp-lookup-allocation
