@@ -412,16 +412,14 @@ void fuzzer_unset_data(void)
     }
 /* End of initialization */
 
-static const char* get_ca_cert_pem_path(const char* argv0)
+static const char* get_certs_path(const char* argv0, const char* file)
 {
     static char ca_cert_pem_path[8192];
-    if ( ca_cert_pem_path[0] == 0x00 ) {
-        char* binary_path = strdup(argv0);
-        if ( snprintf(ca_cert_pem_path, 8192, "%s/certs/ca-cert.pem", dirname(binary_path)) <= 0 ) {
-            abort();
-        }
-        free(binary_path);
+    char* binary_path = strdup(argv0);
+    if ( snprintf(ca_cert_pem_path, 8192, "%s/certs/%s", dirname(binary_path), file) <= 0 ) {
+        abort();
     }
+    free(binary_path);
 
     return ca_cert_pem_path;
 }
