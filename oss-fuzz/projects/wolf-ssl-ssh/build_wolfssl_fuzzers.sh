@@ -35,6 +35,8 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp fuzzer-x509 $OUT/fuzzer-wolfssl-x509
         cp fuzzer-ocsp-lookup $OUT/fuzzer-wolfssl-ocsp-lookup
 
+        cp -R corp-misc/ $OUT/corp-wolfssl-misc/
+
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
     export CFLAGS=${CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
     # Build wolfSSL
