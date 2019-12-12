@@ -27,3 +27,9 @@ Append ```-intensity_guided=1``` to the fuzzer command. Optionally, also append 
 ### Allocation guided fuzzers
 
 Append ```-custom_guided=1``` to the fuzzer command. Optionally, also append ```-no_coverage_guided=1``` to discard the code coverage signal, and focus entirely on the allocation signal.
+
+## Options
+
+### Memory tests
+
+Undefine ```MEMORY_TESTS``` in ```oss-fuzz/projects/wolf-ssl-ssh/fuzzers/include/fuzzers/shared.h``` for more speed, but fewer memory tests on output data. Please see the comments in that file for more information.

@@ -32,7 +32,9 @@ FUZZER_RUN_HEADER
                 outSz &= 0xFFFFFF;
 
                 uint8_t* out = malloc(outSz);
-                Base64_Decode(data, size, out, &outSz);
+                if ( Base64_Decode(data, size, out, &outSz) == 0 ) {
+                    memory_test(out, outSz);
+                }
                 free(out);
             }
             break;
@@ -58,16 +60,20 @@ FUZZER_RUN_HEADER
                 data += sizeof(mode); size -= sizeof(mode);
 
                 uint8_t* out = malloc(outSz);
+                int ret = -1;
                 switch ( mode % 3 ) {
                     case    0:
-                        Base64_Encode(data, size, out, &outSz);
+                        ret = Base64_Encode(data, size, out, &outSz);
                         break;
                     case    1:
-                        Base64_EncodeEsc(data, size, out, &outSz);
+                        ret = Base64_EncodeEsc(data, size, out, &outSz);
                         break;
                     case    2:
-                        Base64_Encode_NoNl(data, size, out, &outSz);
+                        ret = Base64_Encode_NoNl(data, size, out, &outSz);
                         break;
+                }
+                if ( ret == 0 ) {
+                    memory_test(out, outSz);
                 }
                 free(out);
             }
@@ -86,7 +92,9 @@ FUZZER_RUN_HEADER
                 outSz &= 0xFFFFFF;
 
                 uint8_t* out = malloc(outSz);
-                Base16_Decode(data, size, out, &outSz);
+                if ( Base16_Decode(data, size, out, &outSz) == 0 ) {
+                    memory_test(out, outSz);
+                }
                 free(out);
             }
             break;
@@ -104,7 +112,9 @@ FUZZER_RUN_HEADER
                 outSz &= 0xFFFFFF;
 
                 uint8_t* out = malloc(outSz);
-                Base16_Encode(data, size, out, &outSz);
+                if ( Base16_Encode(data, size, out, &outSz) == 0 ) {
+                    memory_test(out, outSz);
+                }
                 free(out);
             }
             break;
@@ -123,7 +133,9 @@ FUZZER_RUN_HEADER
 
                 uint8_t* out = malloc(outSz);
 
-                wc_BerToDer(data, size, out, &outSz);
+                if ( wc_BerToDer(data, size, out, &outSz) == 0 ) {
+                    memory_test(out, outSz);
+                }
 
                 free(out);
             }

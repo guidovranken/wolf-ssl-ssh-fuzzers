@@ -7,13 +7,6 @@ FUZZER_INITIALIZE_HEADER
 FUZZER_INITIALIZE_FOOTER_1
 FUZZER_INITIALIZE_FOOTER_2
 
-static void memory_test(const void* p, size_t size) {
-    return;
-    FILE* fp = fopen("/dev/null", "wb");
-    fwrite(p, size, 1, fp);
-    fclose(fp);
-}
-
 static void DecodedCert_memory_test(const DecodedCert* cert) {
     memory_test(cert->publicKey, cert->pubKeySize);
     memory_test(&cert->pubKeyStored, sizeof(cert->pubKeyStored));
