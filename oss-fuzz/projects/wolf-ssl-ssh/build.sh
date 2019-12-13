@@ -19,6 +19,9 @@ git config --global user.name "Guido Vranken"
     git fetch origin pull/2624/head:pr2624 # Fix build failure (https://github.com/wolfSSL/wolfssl/issues/2639)
     git merge --no-edit pr2624
 
+    git fetch origin pull/2666/head:pr2666 # Fix Base64_Decode buffer overflow
+    git merge --no-edit pr2666
+
     # Apply additional patches if desired
 
 # Patch wolfSSH
