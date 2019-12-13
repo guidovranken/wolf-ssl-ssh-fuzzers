@@ -72,7 +72,7 @@ FUZZER_RUN_HEADER
     if ( wolfSSL_connect(ssl) == WOLFSSL_SUCCESS ) { }
 
 end:
-    ///* noret */ wc_ClearErrorNodes();
+    /* noret */ wc_ClearErrorNodes();
     wolfSSL_free(ssl);
 
     fuzzer_unset_data();
