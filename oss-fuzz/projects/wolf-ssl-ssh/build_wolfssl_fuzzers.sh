@@ -36,6 +36,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp fuzzer-ocsp-lookup $OUT/fuzzer-wolfssl-ocsp-lookup
 
         cp -R corp-client/ $OUT/corp-wolfssl-client/
+        cp -R corp-server/ $OUT/corp-wolfssl-server/
         cp -R corp-misc/ $OUT/corp-wolfssl-misc/
         cp -R corp-crl/ $OUT/corp-wolfssl-crl/
         cp -R corp-ocsp/ $OUT/corp-wolfssl-ocsp/
