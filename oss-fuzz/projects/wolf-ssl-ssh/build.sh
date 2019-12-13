@@ -25,6 +25,9 @@ git config --global user.name "Guido Vranken"
     git fetch origin pull/2669/head:pr2669 # Fix buffer overflow in OCSP parsing
     git merge --no-edit pr2669
 
+    git fetch origin pull/2670/head:pr2670 # Fix buffer overflow in certificate parsing
+    git merge --no-edit pr2670
+
     # Apply additional patches if desired
 
 # Patch wolfSSH
