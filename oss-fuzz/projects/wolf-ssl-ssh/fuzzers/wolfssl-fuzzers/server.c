@@ -72,7 +72,9 @@ FUZZER_RUN_HEADER
         fuzzer_set_data(data, size);
 
         if ( (ssl = wolfSSL_new(ctx[i])) == NULL) {
-            abort();
+            /* wolfSSL_new() may fail if allocation randomization is enabled */
+            fuzzer_unset_data();
+            goto end;
         }
 
         if (wolfSSL_accept(ssl) == SSL_SUCCESS) {
@@ -87,4 +89,5 @@ FUZZER_RUN_HEADER
         fuzzer_unset_data();
     }
 }
+end:
 FUZZER_RUN_FOOTER
