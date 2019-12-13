@@ -65,6 +65,43 @@ Example:
 build/out/wolf-ssl-ssh/fuzzer-wolfssl-misc-allocation -custom_guided=1 build/out/wolf-ssl-ssh/corp-wolfssl-misc/
 ```
 
+### Resource randomization
+
+#### Normal operation
+
+If no arguments are given, then:
+
+- Every request for a memory allocation by wolfSSL/wolfSSH succeeds
+- Every request to receive data succeeds, unless the fuzzer is out of data
+- Every request to send data succeeds
+
+#### Allocation randomization
+
+When ```--randomize-allocation``` is passed on the command line, then
+
+- Some requests for a memory allocation by wolfSSL/wolfSSH fail
+- Every request to receive data succeeds, unless the fuzzer is out of data
+- Every request to send data succeeds
+
+#### IO randomization
+
+When ```--randomize-io``` is passed on the command line, then
+
+- Every request for a memory allocation by wolfSSL/wolfSSH succeeds
+- Some requests to receive data fail, some requests only receive 1..N for N bytes requested
+- Some requests to send data fail, some requests only return 1..N bytes sent for N requested
+
+#### Notes
+
+The corpora for the various possible options:
+
+- normal operation
+- allocation randomization
+- IO randomization
+- allocation randomization + IO randomization
+
+are not interchangeable; each option needs a separate corpus.
+
 ## Options
 
 ### Memory tests
