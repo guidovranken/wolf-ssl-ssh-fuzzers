@@ -43,49 +43,52 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp -R corp-x509/ $OUT/corp-wolfssl-x509/
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
-    export CFLAGS=${CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
-    # Build wolfSSL
-        cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/
-        autoreconf -ivf
-        ./configure $WOLFSSL_CONFIGURE_PARAMS
-        make -j$(nproc)
+    if [[ $CFLAGS != *-m32* ]]
+    then
+        export CFLAGS=${CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
+        # Build wolfSSL
+            cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/
+            autoreconf -ivf
+            ./configure $WOLFSSL_CONFIGURE_PARAMS
+            make -j$(nproc)
 
-    # Build wolfSSL fuzzers (intensity guided)
-        cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
+        # Build wolfSSL fuzzers (intensity guided)
+            cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
 
-        make -B fuzzer-client-intensity
-        make -B fuzzer-server-intensity
-        make -B fuzzer-misc-intensity
-        make -B fuzzer-crl-intensity
-        make -B fuzzer-ocsp-intensity
-        make -B fuzzer-x509-intensity
-        make -B fuzzer-ocsp-lookup-intensity
+            make -B fuzzer-client-intensity
+            make -B fuzzer-server-intensity
+            make -B fuzzer-misc-intensity
+            make -B fuzzer-crl-intensity
+            make -B fuzzer-ocsp-intensity
+            make -B fuzzer-x509-intensity
+            make -B fuzzer-ocsp-lookup-intensity
 
-        cp fuzzer-client-intensity $OUT/fuzzer-wolfssl-client-intensity
-        cp fuzzer-server-intensity $OUT/fuzzer-wolfssl-server-intensity
-        cp fuzzer-misc-intensity $OUT/fuzzer-wolfssl-misc-intensity
-        cp fuzzer-crl-intensity $OUT/fuzzer-wolfssl-crl-intensity
-        cp fuzzer-ocsp-intensity $OUT/fuzzer-wolfssl-ocsp-intensity
-        cp fuzzer-x509-intensity $OUT/fuzzer-wolfssl-x509-intensity
-        cp fuzzer-ocsp-lookup-intensity $OUT/fuzzer-wolfssl-ocsp-lookup-intensity
+            cp fuzzer-client-intensity $OUT/fuzzer-wolfssl-client-intensity
+            cp fuzzer-server-intensity $OUT/fuzzer-wolfssl-server-intensity
+            cp fuzzer-misc-intensity $OUT/fuzzer-wolfssl-misc-intensity
+            cp fuzzer-crl-intensity $OUT/fuzzer-wolfssl-crl-intensity
+            cp fuzzer-ocsp-intensity $OUT/fuzzer-wolfssl-ocsp-intensity
+            cp fuzzer-x509-intensity $OUT/fuzzer-wolfssl-x509-intensity
+            cp fuzzer-ocsp-lookup-intensity $OUT/fuzzer-wolfssl-ocsp-lookup-intensity
 
-    # Build wolfSSL fuzzers (allocation guided)
-        cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
+        # Build wolfSSL fuzzers (allocation guided)
+            cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
 
-        make -B fuzzer-client-allocation
-        make -B fuzzer-server-allocation
-        make -B fuzzer-misc-allocation
-        make -B fuzzer-crl-allocation
-        make -B fuzzer-ocsp-allocation
-        make -B fuzzer-x509-allocation
-        make -B fuzzer-ocsp-lookup-allocation
+            make -B fuzzer-client-allocation
+            make -B fuzzer-server-allocation
+            make -B fuzzer-misc-allocation
+            make -B fuzzer-crl-allocation
+            make -B fuzzer-ocsp-allocation
+            make -B fuzzer-x509-allocation
+            make -B fuzzer-ocsp-lookup-allocation
 
-        cp fuzzer-client-allocation $OUT/fuzzer-wolfssl-client-allocation
-        cp fuzzer-server-allocation $OUT/fuzzer-wolfssl-server-allocation
-        cp fuzzer-misc-allocation $OUT/fuzzer-wolfssl-misc-allocation
-        cp fuzzer-crl-allocation $OUT/fuzzer-wolfssl-crl-allocation
-        cp fuzzer-ocsp-allocation $OUT/fuzzer-wolfssl-ocsp-allocation
-        cp fuzzer-x509-allocation $OUT/fuzzer-wolfssl-x509-allocation
-        cp fuzzer-ocsp-lookup-allocation $OUT/fuzzer-wolfssl-ocsp-lookup-allocation
+            cp fuzzer-client-allocation $OUT/fuzzer-wolfssl-client-allocation
+            cp fuzzer-server-allocation $OUT/fuzzer-wolfssl-server-allocation
+            cp fuzzer-misc-allocation $OUT/fuzzer-wolfssl-misc-allocation
+            cp fuzzer-crl-allocation $OUT/fuzzer-wolfssl-crl-allocation
+            cp fuzzer-ocsp-allocation $OUT/fuzzer-wolfssl-ocsp-allocation
+            cp fuzzer-x509-allocation $OUT/fuzzer-wolfssl-x509-allocation
+            cp fuzzer-ocsp-lookup-allocation $OUT/fuzzer-wolfssl-ocsp-lookup-allocation
+    fi
 
 cp -R $SRC/fuzzers/wolfssl/wolfssl/certs/ $OUT/

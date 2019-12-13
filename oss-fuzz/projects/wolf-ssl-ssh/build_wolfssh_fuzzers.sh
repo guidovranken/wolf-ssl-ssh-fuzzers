@@ -41,38 +41,41 @@ export ORIGINAL_CFLAGS="$CFLAGS"
         cp -R corp-server/ $OUT/corp-wolfssh-server/
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
-    export ORIGINAL_CFLAGS=${ORIGINAL_CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
+    if [[ $CFLAGS != *-m32* ]]
+    then
+        export ORIGINAL_CFLAGS=${ORIGINAL_CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
 
-    # Build wolfSSL (required for wolfSSH)
-        cd $SRC/fuzzers/wolfssh/wolfssl_trace_pc_guard/
-        autoreconf -ivf
-        ./configure $WOLFSSL_BASE_CONFIGURE_PARAMS --enable-ssh --enable-keygen
-        make -j$(nproc)
+        # Build wolfSSL (required for wolfSSH)
+            cd $SRC/fuzzers/wolfssh/wolfssl_trace_pc_guard/
+            autoreconf -ivf
+            ./configure $WOLFSSL_BASE_CONFIGURE_PARAMS --enable-ssh --enable-keygen
+            make -j$(nproc)
 
-    # Required to configure + build wolfSSH without having to install wolfSSL
-        export LDFLAGS="-L$(realpath src/.libs/)"
-        export CFLAGS="$ORIGINAL_CFLAGS -I $(realpath .)"
+        # Required to configure + build wolfSSH without having to install wolfSSL
+            export LDFLAGS="-L$(realpath src/.libs/)"
+            export CFLAGS="$ORIGINAL_CFLAGS -I $(realpath .)"
 
-    # Build wolfSSH
-        cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/
-        autoreconf -ivf
-        ./configure --enable-static --enable-all --disable-examples
-        make -j$(nproc)
+        # Build wolfSSH
+            cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/
+            autoreconf -ivf
+            ./configure --enable-static --enable-all --disable-examples
+            make -j$(nproc)
 
-    # Build wolfSSH fuzzers (intensity guided)
-        cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/wolfssh-fuzzers
+        # Build wolfSSH fuzzers (intensity guided)
+            cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/wolfssh-fuzzers
 
-        make -B fuzzer-client-intensity
-        make -B fuzzer-server-intensity
+            make -B fuzzer-client-intensity
+            make -B fuzzer-server-intensity
 
-        cp fuzzer-client-intensity $OUT/fuzzer-wolfssh-client-intensity
-        cp fuzzer-server-intensity $OUT/fuzzer-wolfssh-server-intensity
+            cp fuzzer-client-intensity $OUT/fuzzer-wolfssh-client-intensity
+            cp fuzzer-server-intensity $OUT/fuzzer-wolfssh-server-intensity
 
-    # Build wolfSSH fuzzers (allocation guided)
-        cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/wolfssh-fuzzers
+        # Build wolfSSH fuzzers (allocation guided)
+            cd $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/wolfssh-fuzzers
 
-        make -B fuzzer-client-allocation
-        make -B fuzzer-server-allocation
+            make -B fuzzer-client-allocation
+            make -B fuzzer-server-allocation
 
-        cp fuzzer-client-allocation $OUT/fuzzer-wolfssh-client-allocation
-        cp fuzzer-server-allocation $OUT/fuzzer-wolfssh-server-allocation
+            cp fuzzer-client-allocation $OUT/fuzzer-wolfssh-client-allocation
+            cp fuzzer-server-allocation $OUT/fuzzer-wolfssh-server-allocation
+    fi
