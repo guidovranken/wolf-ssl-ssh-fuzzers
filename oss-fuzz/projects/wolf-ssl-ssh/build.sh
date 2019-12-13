@@ -3,7 +3,7 @@
 # Global configuration
 export LIBFUZZER_A_PATH="$LIB_FUZZING_ENGINE"
 export FUZZERS_INCLUDE_PATH=$(realpath $SRC/fuzzers/include)
-export WOLFSSL_BASE_CONFIGURE_PARAMS="--enable-static --disable-examples --disable-crypttests"
+export WOLFSSL_BASE_CONFIGURE_PARAMS="--enable-static --disable-examples --disable-crypttests --disable-asm"
 if [[ $CFLAGS = *sanitize=memory* ]]
 then
     export WOLFSSL_BASE_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --disable-asm"
