@@ -52,11 +52,5 @@ git config --global user.name "Guido Vranken"
     /bin/bash $SRC/build_wolfssl_fuzzers.sh
 
 # Build wolfSSH + fuzzers
-    # 32 bit build of wolfSSH currenly fails
-    # See: https://github.com/wolfSSL/wolfssh/issues/221
-    # Remove this restriction once that bug is resolved
-    if [[ $CFLAGS != *-m32* ]]
-    then
-        # Build wolfSSH + wolfSSL + fuzzers
-        /bin/bash $SRC/build_wolfssh_fuzzers.sh
-    fi
+    # Build wolfSSH + wolfSSL + fuzzers
+    /bin/bash $SRC/build_wolfssh_fuzzers.sh
