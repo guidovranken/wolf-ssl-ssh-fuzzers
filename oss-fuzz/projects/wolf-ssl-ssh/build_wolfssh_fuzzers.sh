@@ -37,6 +37,9 @@ export ORIGINAL_CFLAGS="$CFLAGS"
         cp fuzzer-client $OUT/fuzzer-wolfssh-client
         cp fuzzer-server $OUT/fuzzer-wolfssh-server
 
+        cp -R corp-client/ $OUT/corp-wolfssh-client/
+        cp -R corp-server/ $OUT/corp-wolfssh-server/
+
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
     export ORIGINAL_CFLAGS=${ORIGINAL_CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
 
