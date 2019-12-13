@@ -22,6 +22,9 @@ git config --global user.name "Guido Vranken"
     git fetch origin pull/2666/head:pr2666 # Fix Base64_Decode buffer overflow
     git merge --no-edit pr2666
 
+    git fetch origin pull/2669/head:pr2669 # Fix buffer overflow in OCSP parsing
+    git merge --no-edit pr2669
+
     # Apply additional patches if desired
 
 # Patch wolfSSH
