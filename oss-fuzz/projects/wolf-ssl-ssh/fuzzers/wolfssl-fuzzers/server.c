@@ -68,7 +68,6 @@ FUZZER_RUN_HEADER
     WOLFSSL* ssl;
 
     for (int i = 0; i < NUM_METHODS; i++) {
-        if ( i != 2 ) continue;
         fuzzer_set_data(data, size);
 
         if ( (ssl = wolfSSL_new(ctx[i])) == NULL) {
