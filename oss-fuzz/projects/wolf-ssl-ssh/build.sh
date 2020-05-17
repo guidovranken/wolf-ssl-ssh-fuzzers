@@ -9,31 +9,15 @@ then
     export WOLFSSL_BASE_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --disable-asm"
 fi
 
-# For applying patches, if any
-git config --global user.email "guidovranken@gmail.com"
-git config --global user.name "Guido Vranken"
-
 # Patch wolfSSL
     cd $SRC/wolfssl
 
-    git fetch origin pull/2624/head:pr2624 # Fix build failure (https://github.com/wolfSSL/wolfssl/issues/2639)
-    git merge --no-edit pr2624
-
-    git fetch origin pull/2666/head:pr2666 # Fix Base64_Decode buffer overflow
-    git merge --no-edit pr2666
-
-    git fetch origin pull/2669/head:pr2669 # Fix buffer overflow in OCSP parsing
-    git merge --no-edit pr2669
-
-    git fetch origin pull/2670/head:pr2670 # Fix buffer overflow in certificate parsing
-    git merge --no-edit pr2670
-
-    # Apply additional patches if desired
+    # Apply patches if desired
 
 # Patch wolfSSH
     cd $SRC/wolfssh
 
-    # Apply additional patches if desired
+    # Apply patches if desired
 
 # Build libfuzzer-gv -- needed for intensity and allocation guided fuzzing
     cd $SRC/libfuzzer-gv
