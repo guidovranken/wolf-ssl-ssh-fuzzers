@@ -7,7 +7,7 @@ cp -R $SRC/fuzzers/wolfssl-fuzzers $SRC/fuzzers/wolfssl/wolfssl/
 cp -R $SRC/fuzzers/wolfssl/wolfssl/ $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
-export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk"
+export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ocspstapling"
 
 # Build everything with -fsanitize=fuzzer-no-link (normal code coverage guided fuzzing)
     # Build wolfSSL
