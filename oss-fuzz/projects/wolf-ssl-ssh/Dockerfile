@@ -19,6 +19,7 @@ MAINTAINER guidovranken@gmail.com
 RUN apt-get update && apt-get install -y make autoconf automake libtool
 RUN git clone https://github.com/wolfSSL/wolfssl.git 
 RUN git clone https://github.com/wolfSSL/wolfssh.git 
+RUN git clone --depth 1 https://github.com/guidovranken/fuzzing-headers.git
 RUN git clone --depth 1 https://github.com/guidovranken/libfuzzer-gv.git
 COPY build.sh $SRC/
 COPY build_wolfssl_fuzzers.sh $SRC/

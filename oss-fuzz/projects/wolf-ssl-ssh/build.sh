@@ -19,6 +19,10 @@ fi
 
     # Apply patches if desired
 
+# Install fuzzing headers
+    cd $SRC/fuzzing-headers
+    ./install.sh
+
 # Build libfuzzer-gv -- needed for intensity and allocation guided fuzzing
     cd $SRC/libfuzzer-gv
     # Some patches to make libfuzzer-gv compile in this environment
