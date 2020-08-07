@@ -1,6 +1,10 @@
 #include <wolfssl/options.h>
 #include <wolfssl/wolfcrypt/coding.h>
 #include <wolfssl/wolfcrypt/asn.h>
+#include <wolfssl/wolfcrypt/curve25519.h>
+#include <wolfssl/wolfcrypt/curve448.h>
+#include <wolfssl/wolfcrypt/ed448.h>
+#include <wolfssl/wolfcrypt/ed25519.h>
 #include <fuzzers/shared.h>
 
 FUZZER_INITIALIZE_HEADER
@@ -138,6 +142,113 @@ FUZZER_RUN_HEADER
                 }
 
                 free(out);
+            }
+            break;
+        case    5:
+            {
+                wc_curve25519_check_public(data, size, EC25519_LITTLE_ENDIAN);
+                wc_curve25519_check_public(data, size, EC25519_BIG_ENDIAN);
+            }
+            break;
+        case    6:
+            {
+                wc_curve448_check_public(data, size, EC448_LITTLE_ENDIAN);
+                wc_curve448_check_public(data, size, EC448_BIG_ENDIAN);
+            }
+            break;
+        case    7:
+            {
+                    ed448_key key;
+                    if ( wc_ed448_init(&key) == 0 ) {
+                        if ( wc_ed448_import_public(data, size, &key) == 0 ) {
+                            unsigned char out[ED448_PUB_KEY_SIZE];
+                            wc_ed448_make_public(&key, out, ED448_PUB_KEY_SIZE);
+                        }
+                        wc_ed448_free(&key);
+                    }
+            }
+            break;
+        case    8:
+            {
+                    ed25519_key key;
+                    if ( wc_ed25519_init(&key) == 0 ) {
+                        if ( wc_ed25519_import_public(data, size, &key) == 0 ) {
+                            unsigned char out[ED25519_PUB_KEY_SIZE];
+                            wc_ed25519_make_public(&key, out, ED25519_PUB_KEY_SIZE);
+                        }
+                        wc_ed25519_free(&key);
+                    }
+            }
+            break;
+        case    9:
+            {
+                    curve25519_key key;
+                    if ( wc_curve25519_init(&key) == 0 ) {
+                        if ( wc_curve25519_import_public(data, size, &key) == 0 ) {
+                            unsigned char out[CURVE25519_KEYSIZE];
+                            word32 outLen = sizeof(out);
+                            wc_curve25519_export_public(&key, out, &outLen);
+                        }
+                        wc_curve25519_free(&key);
+                    }
+            }
+            break;
+        case    10:
+            {
+                    curve448_key key;
+                    if ( wc_curve448_init(&key) == 0 ) {
+                        if ( wc_curve448_import_public(data, size, &key) == 0 ) {
+                            unsigned char out[CURVE448_PUB_KEY_SIZE];
+                            word32 outLen = sizeof(out);
+                            wc_curve448_export_public(&key, out, &outLen);
+                        }
+                        wc_curve448_free(&key);
+                    }
+            }
+            break;
+        case    11:
+            {
+                    ed25519_key key;
+                    if ( wc_ed25519_init(&key) == 0 ) {
+                        wc_ed25519_import_private_only(data, size, &key);
+                        wc_ed25519_free(&key);
+                    }
+            }
+            break;
+        case    12:
+            {
+                    ed448_key key;
+                    if ( wc_ed448_init(&key) == 0 ) {
+                        wc_ed448_import_private_only(data, size, &key);
+                        wc_ed448_free(&key);
+                    }
+            }
+            break;
+        case    13:
+            {
+                    curve25519_key key;
+                    if ( wc_curve25519_init(&key) == 0 ) {
+                        wc_curve25519_import_private_raw(data, size, NULL, 0, &key);
+                        wc_curve25519_free(&key);
+                    }
+            }
+            break;
+        case    14:
+            {
+                    curve448_key key;
+                    if ( wc_curve448_init(&key) == 0 ) {
+                        wc_curve448_import_private_raw(data, size, NULL, 0, &key);
+                        wc_curve448_free(&key);
+                    }
+            }
+            break;
+        case    15:
+            {
+                ecc_key key;
+                if ( wc_ecc_init(&key) == 0 ) {
+                    wc_ecc_import_private_key(data, size, NULL, 0, &key);
+                    wc_ecc_free(&key);
+                }
             }
             break;
     }
