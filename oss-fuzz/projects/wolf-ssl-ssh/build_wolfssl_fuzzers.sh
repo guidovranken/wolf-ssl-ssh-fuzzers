@@ -7,7 +7,7 @@ cp -R $SRC/fuzzers/wolfssl-fuzzers $SRC/fuzzers/wolfssl/wolfssl/
 cp -R $SRC/fuzzers/wolfssl/wolfssl/ $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
-export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ocspstapling"
+export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp"
 
 # Build everything with -fsanitize=fuzzer-no-link (normal code coverage guided fuzzing)
     # Build wolfSSL
@@ -27,6 +27,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         make -B fuzzer-x509
         make -B fuzzer-ocsp-lookup
         make -B fuzzer-rsa
+        make -B fuzzer-srp
 
         cp fuzzer-client $OUT/fuzzer-wolfssl-client
         cp fuzzer-server $OUT/fuzzer-wolfssl-server
@@ -36,6 +37,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp fuzzer-x509 $OUT/fuzzer-wolfssl-x509
         cp fuzzer-ocsp-lookup $OUT/fuzzer-wolfssl-ocsp-lookup
         cp fuzzer-rsa $OUT/fuzzer-wolfssl-rsa
+        cp fuzzer-srp $OUT/fuzzer-wolfssl-srp
 
         cp -R corp-client/ $OUT/corp-wolfssl-client/
         cp -R corp-server/ $OUT/corp-wolfssl-server/
@@ -44,6 +46,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         cp -R corp-ocsp/ $OUT/corp-wolfssl-ocsp/
         cp -R corp-x509/ $OUT/corp-wolfssl-x509/
         cp -R corp-rsa/ $OUT/corp-wolfssl-rsa/
+        cp -R corp-srp/ $OUT/corp-wolfssl-srp/
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
     if [[ $CFLAGS != *-m32* ]]

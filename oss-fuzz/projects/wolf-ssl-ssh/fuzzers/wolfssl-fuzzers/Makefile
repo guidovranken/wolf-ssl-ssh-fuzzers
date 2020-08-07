@@ -4,7 +4,7 @@ FUZZERS_CFLAGS = $(CFLAGS) -I .. -I $(FUZZERS_INCLUDE_PATH)
 FUZZERS_LIBS = $(LIBFUZZER_A_PATH) $(WOLFSSL_A_PATH)
 FUZZERS_LIBS_GV = $(LIBFUZZER_GV_A_PATH) $(WOLFSSL_A_PATH)
 
-all : fuzzer-client fuzzer-client-intensity fuzzer-client-allocation fuzzer-server fuzzer-server-intensity fuzzer-server-allocation fuzzer-misc fuzzer-misc-intensity fuzzer-misc-allocation fuzzer-crl fuzzer-crl-intensity fuzzer-crl-allocation fuzzer-ocsp fuzzer-ocsp-intensity fuzzer-ocsp-allocation fuzzer-x509 fuzzer-x509-intensity fuzzer-x509-allocation fuzzer-ocsp-lookup fuzzer-ocsp-lookup-intensity fuzzer-ocsp-lookup-allocation fuzzer-rsa
+all : fuzzer-client fuzzer-client-intensity fuzzer-client-allocation fuzzer-server fuzzer-server-intensity fuzzer-server-allocation fuzzer-misc fuzzer-misc-intensity fuzzer-misc-allocation fuzzer-crl fuzzer-crl-intensity fuzzer-crl-allocation fuzzer-ocsp fuzzer-ocsp-intensity fuzzer-ocsp-allocation fuzzer-x509 fuzzer-x509-intensity fuzzer-x509-allocation fuzzer-ocsp-lookup fuzzer-ocsp-lookup-intensity fuzzer-ocsp-lookup-allocation fuzzer-rsa fuzzer-rsa
 
 client.o : client.c
 	$(CC) $(FUZZERS_CFLAGS) client.c -c -o client.o
@@ -85,3 +85,6 @@ fuzzer-ocsp-lookup-allocation : ocsp-lookup-allocation.o
 
 fuzzer-rsa: rsa.cpp
 	$(CXX) $(CXXFLAGS) $(FUZZERS_CFLAGS) rsa.cpp $(FUZZERS_LIBS) -o fuzzer-rsa
+
+fuzzer-srp: srp.cpp
+	$(CXX) $(CXXFLAGS) $(FUZZERS_CFLAGS) srp.cpp $(FUZZERS_LIBS) -o fuzzer-srp
