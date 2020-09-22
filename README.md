@@ -107,3 +107,7 @@ are not interchangeable; each option needs a separate corpus.
 ### Memory tests
 
 Undefine ```MEMORY_TESTS``` in ```oss-fuzz/projects/wolf-ssl-ssh/fuzzers/include/fuzzers/shared.h``` for more speed, but fewer memory tests on output data. Please see the comments in that file for more information.
+
+## License
+
+The [oss-fuzz/LICENSE](oss-fuzz/LICENSE) file (Apache 2) applies to all files in the `oss-fuzz/` tree, EXCEPT for the files in the `oss-fuzz/projects/wolf-ssl-ssh/` tree, to which the [GPLv2](LICENSE) license applies.
