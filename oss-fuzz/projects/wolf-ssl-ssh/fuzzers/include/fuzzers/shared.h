@@ -407,6 +407,9 @@ void memory_test(const void* p, const size_t size)
 
         for (int i = 1; i < argc; i++) {
             if ( argv[i][0] == '-' && argv[i][1] == '-' ) {
+#if defined(OSS_FUZZ_BUILD_RANDOMIZE)
+                enable_io_randomization();
+#else
                 if ( !strcmp(argv[i], "--randomize-io") ) {
                     enable_io_randomization();
                 } else if ( !strcmp(argv[i], "--randomize-alloc") ) {
@@ -415,15 +418,20 @@ void memory_test(const void* p, const size_t size)
                     printf("Invalid parameter: %s\n", argv[i]);
                     exit(0);
                 }
+#endif
             }
         }
     }
 
     void fuzzer_post_initialize(const int argc, char** argv) {
         for (int i = 1; i < argc; i++) {
+#if defined(OSS_FUZZ_BUILD_RANDOMIZE)
+            enable_allocation_randomization();
+#else
             if ( !strcmp(argv[i], "--randomize-alloc") ) {
                 enable_allocation_randomization();
             }
+#endif
         }
     }
 /* End of initialization */

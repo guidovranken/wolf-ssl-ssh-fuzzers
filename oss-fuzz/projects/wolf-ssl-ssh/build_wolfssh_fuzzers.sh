@@ -5,8 +5,10 @@ mkdir -p $SRC/fuzzers/wolfssh/
 cp -R $SRC/wolfssh/ $SRC/fuzzers/wolfssh/
 cp -R $SRC/wolfssl/ $SRC/fuzzers/wolfssh/
 cp -R $SRC/fuzzers/wolfssh-fuzzers $SRC/fuzzers/wolfssh/wolfssh/
-cp -R $SRC/fuzzers/wolfssh/wolfssl/ $SRC/fuzzers/wolfssh/wolfssl_trace_pc_guard/
-cp -R $SRC/fuzzers/wolfssh/wolfssh/ $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/
+if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
+    cp -R $SRC/fuzzers/wolfssh/wolfssl/ $SRC/fuzzers/wolfssh/wolfssl_trace_pc_guard/
+    cp -R $SRC/fuzzers/wolfssh/wolfssh/ $SRC/fuzzers/wolfssh/wolfssh_trace_pc_guard/
+fi
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
 export ORIGINAL_CFLAGS="$CFLAGS"
@@ -37,10 +39,25 @@ export ORIGINAL_CFLAGS="$CFLAGS"
         cp fuzzer-client $OUT/fuzzer-wolfssh-client
         cp fuzzer-server $OUT/fuzzer-wolfssh-server
 
-        cp -R corp-client/ $OUT/corp-wolfssh-client/
-        cp -R corp-server/ $OUT/corp-wolfssh-server/
+        if [[ "$OSS_FUZZ_BUILD" -eq "1" ]]; then
+            CFLAGS="$CFLAGS -DOSS_FUZZ_BUILD_RANDOMIZE" make -B fuzzer-client
+            cp fuzzer-client $OUT/fuzzer-wolfssh-client-randomize
+            CFLAGS="$CFLAGS -DOSS_FUZZ_BUILD_RANDOMIZE" make -B fuzzer-server
+            cp fuzzer-server $OUT/fuzzer-wolfssh-server-randomize
+        fi
+
+        if [[ "$OSS_FUZZ_BUILD" -eq "1" ]]; then
+            zip $OUT/fuzzer-wolfssh-client_seed_corpus.zip corp-client/*
+            zip $OUT/fuzzer-wolfssh-client-randomize_seed_corpus.zip corp-client-rand/*
+            zip $OUT/fuzzer-wolfssh-server_seed_corpus.zip corp-server/*
+            zip $OUT/fuzzer-wolfssh-server-randomize_seed_corpus.zip corp-server/*
+        else
+            cp -R corp-client/ $OUT/corp-wolfssh-client/
+            cp -R corp-server/ $OUT/corp-wolfssh-server/
+        fi
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
+if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
     if [[ $CFLAGS != *-m32* ]]
     then
         export ORIGINAL_CFLAGS=${ORIGINAL_CFLAGS/"-fsanitize=fuzzer-no-link"/"-fsanitize-coverage=trace-pc-guard"}
@@ -79,3 +96,4 @@ export ORIGINAL_CFLAGS="$CFLAGS"
             cp fuzzer-client-allocation $OUT/fuzzer-wolfssh-client-allocation
             cp fuzzer-server-allocation $OUT/fuzzer-wolfssh-server-allocation
     fi
+fi

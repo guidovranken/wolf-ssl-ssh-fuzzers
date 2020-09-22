@@ -1,5 +1,11 @@
 #!/bin/bash -eu
 
+if [[ -z "${OSS_FUZZ_BUILD-}" ]]; then
+    export OSS_FUZZ_BUILD=0
+else
+    export OSS_FUZZ_BUILD=1
+fi
+
 # Global configuration
 export LIBFUZZER_A_PATH="$LIB_FUZZING_ENGINE"
 export FUZZERS_INCLUDE_PATH=$(realpath $SRC/fuzzers/include)
@@ -24,6 +30,7 @@ fi
     ./install.sh
 
 # Build libfuzzer-gv -- needed for intensity and allocation guided fuzzing
+if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
     cd $SRC/libfuzzer-gv
     # Some patches to make libfuzzer-gv compile in this environment
         sed -i 's/ALWAYS_INLINE//g' *.h *.cpp
@@ -35,6 +42,7 @@ fi
         fi
     make -j$(nproc)
     export LIBFUZZER_GV_A_PATH=$(realpath libFuzzer.a)
+fi
 
 # Build wolfSSL + fuzzers
     /bin/bash $SRC/build_wolfssl_fuzzers.sh
