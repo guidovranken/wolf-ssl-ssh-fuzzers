@@ -9,7 +9,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
 fi
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
-export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp"
+export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp --enable-pkcs7"
 
 # Build everything with -fsanitize=fuzzer-no-link (normal code coverage guided fuzzing)
     # Build wolfSSL
@@ -32,6 +32,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         fi
         make -B fuzzer-rsa
         make -B fuzzer-srp
+        make -B fuzzer-pkcs7
 
         cp fuzzer-client $OUT/fuzzer-wolfssl-client
         cp fuzzer-server $OUT/fuzzer-wolfssl-server
@@ -44,6 +45,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         fi
         cp fuzzer-rsa $OUT/fuzzer-wolfssl-rsa
         cp fuzzer-srp $OUT/fuzzer-wolfssl-srp
+        cp fuzzer-pkcs7 $OUT/fuzzer-wolfssl-pkcs7
 
         if [[ "$OSS_FUZZ_BUILD" -eq "1" ]]; then
             CFLAGS="$CFLAGS -DOSS_FUZZ_BUILD_RANDOMIZE" make -B fuzzer-client
@@ -63,6 +65,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
             zip $OUT/fuzzer-wolfssl-x509_seed_corpus.zip corp-x509/*
             zip $OUT/fuzzer-wolfssl-rsa_seed_corpus.zip corp-rsa/*
             zip $OUT/fuzzer-wolfssl-srp_seed_corpus.zip corp-srp/*
+            zip $OUT/fuzzer-wolfssl-pkcs7_seed_corpus.zip corp-pkcs7/*
         else
             cp -R corp-client/ $OUT/corp-wolfssl-client/
             cp -R corp-server/ $OUT/corp-wolfssl-server/
@@ -71,7 +74,7 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
             cp -R corp-ocsp/ $OUT/corp-wolfssl-ocsp/
             cp -R corp-x509/ $OUT/corp-wolfssl-x509/
             cp -R corp-rsa/ $OUT/corp-wolfssl-rsa/
-            cp -R corp-srp/ $OUT/corp-wolfssl-srp/
+            cp -R corp-pkcs7/ $OUT/corp-wolfssl-pkcs7/
         fi
 
 # Build everything with -fsanitize-coverage=trace-pc-guard (for intensity and allocation guided fuzzing)
@@ -95,6 +98,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
             make -B fuzzer-ocsp-intensity
             make -B fuzzer-x509-intensity
             make -B fuzzer-ocsp-lookup-intensity
+            make -B fuzzer-pkcs7-intensity
 
             cp fuzzer-client-intensity $OUT/fuzzer-wolfssl-client-intensity
             cp fuzzer-server-intensity $OUT/fuzzer-wolfssl-server-intensity
@@ -103,6 +107,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
             cp fuzzer-ocsp-intensity $OUT/fuzzer-wolfssl-ocsp-intensity
             cp fuzzer-x509-intensity $OUT/fuzzer-wolfssl-x509-intensity
             cp fuzzer-ocsp-lookup-intensity $OUT/fuzzer-wolfssl-ocsp-lookup-intensity
+            cp fuzzer-pkcs7-intensity $OUT/fuzzer-wolfssl-pkcs7-intensity
 
         # Build wolfSSL fuzzers (allocation guided)
             cd $SRC/fuzzers/wolfssl/wolfssl_trace_pc_guard/wolfssl-fuzzers
@@ -114,6 +119,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
             make -B fuzzer-ocsp-allocation
             make -B fuzzer-x509-allocation
             make -B fuzzer-ocsp-lookup-allocation
+            make -B fuzzer-pkcs7-allocation
 
             cp fuzzer-client-allocation $OUT/fuzzer-wolfssl-client-allocation
             cp fuzzer-server-allocation $OUT/fuzzer-wolfssl-server-allocation
@@ -122,6 +128,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
             cp fuzzer-ocsp-allocation $OUT/fuzzer-wolfssl-ocsp-allocation
             cp fuzzer-x509-allocation $OUT/fuzzer-wolfssl-x509-allocation
             cp fuzzer-ocsp-lookup-allocation $OUT/fuzzer-wolfssl-ocsp-lookup-allocation
+            cp fuzzer-pkcs7-allocation $OUT/fuzzer-wolfssl-pkcs7-allocation
     fi
 fi
 
