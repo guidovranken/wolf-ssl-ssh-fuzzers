@@ -1,4 +1,5 @@
 #include <wolfssh/ssh.h>
+#include <wolfssh/wolfscp.h>
 #include <fuzzers/shared.h>
 
 WOLFSSH_CTX* ctx = NULL;
@@ -12,6 +13,20 @@ static int wsUserAuth(byte authType,
     /* TODO */
     return WOLFSSH_USERAUTH_SUCCESS;
     //return WOLFSSH_USERAUTH_FAILURE;
+}
+
+int fuzzerScpRecvCallback(WOLFSSH* ssh, int state, const char* basePath,
+        const char* fileName, int fileMode, word64 mTime, word64 aTime,
+        word32 totalFileSz, byte* buf, word32 bufSz, word32 fileOffset,
+        void* ctx) {
+    return WS_SCP_ABORT;
+}
+
+int fuzzerScpSendCallback(WOLFSSH* ssh, int state, const char* peerRequest,
+        char* fileName, word32 fileNameSz, word64* mTime, word64* aTime,
+        int* fileMode, word32 fileOffset, word32* totalFileSz, byte* buf,
+        word32 bufSz, void* ctx) {
+    return WS_SCP_ABORT;
 }
 
 FUZZER_INITIALIZE_HEADER
@@ -33,6 +48,9 @@ FUZZER_INITIALIZE_HEADER
 
     /* noret */ wolfSSH_SetIORecv(ctx, fuzzer_recv);
     /* noret */ wolfSSH_SetIOSend(ctx, fuzzer_send);
+
+    /* noret */ wolfSSH_SetScpRecv(ctx, fuzzerScpRecvCallback);
+    /* noret */ wolfSSH_SetScpSend(ctx, fuzzerScpSendCallback);
 }
 FUZZER_INITIALIZE_FOOTER_1
 FUZZER_INITIALIZE_FOOTER_2
