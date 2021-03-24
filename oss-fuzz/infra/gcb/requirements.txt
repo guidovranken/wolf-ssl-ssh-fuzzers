@@ -30,6 +30,6 @@ python-jenkins==1.0.0
 pytz==2018.4
 PyYAML==5.1
 requests==2.21.0
-rsa==3.4.2
+rsa==4.1
 six==1.11.0
 uritemplate==3.0.0
