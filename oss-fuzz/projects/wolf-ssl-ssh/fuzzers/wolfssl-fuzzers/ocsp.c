@@ -9,8 +9,9 @@ FUZZER_INITIALIZE_FOOTER_2
 FUZZER_RUN_HEADER
 {
     OcspResponse resp;
+    OcspEntry single;
     CertStatus status;
-    InitOcspResponse(&resp, &status, data, size);
+    InitOcspResponse(&resp, &single, &status, data, size, NULL);
     OcspResponseDecode(&resp, NULL, NULL, 1);
 }
 FUZZER_RUN_FOOTER
