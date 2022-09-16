@@ -2,7 +2,7 @@
 #include <wolfssl/ssl.h>
 #include <fuzzers/shared.h>
 
-#define NUM_METHODS 4
+#define NUM_METHODS 5
 
 WOLFSSL_CTX* ctx[NUM_METHODS];
 WOLFSSL_METHOD* method[NUM_METHODS];
@@ -31,6 +31,7 @@ FUZZER_INITIALIZE_HEADER
     method[1] = wolfTLSv1_1_server_method();
     method[2] = wolfTLSv1_3_server_method();
     method[3] = wolfDTLSv1_2_server_method();
+    method[4] = wolfDTLSv1_3_server_method();
 
     for (int i = 0; i < NUM_METHODS; i++) {
         if ( (ctx[i] = wolfSSL_CTX_new(method[i])) == NULL) {
