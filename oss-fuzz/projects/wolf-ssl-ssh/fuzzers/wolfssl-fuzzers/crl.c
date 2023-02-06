@@ -10,7 +10,7 @@ FUZZER_RUN_HEADER
 {
     DecodedCRL dcrl;
     InitDecodedCRL(&dcrl, NULL);
-    ParseCRL(&dcrl, data, size, NULL);
+    ParseCRL(NULL, &dcrl, data, size, 0, NULL);
     FreeDecodedCRL(&dcrl);
 }
 FUZZER_RUN_FOOTER

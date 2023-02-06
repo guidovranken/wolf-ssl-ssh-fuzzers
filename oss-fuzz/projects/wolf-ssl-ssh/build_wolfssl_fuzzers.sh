@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+set -e
+
 rm -rf $SRC/fuzzers/wolfssl/
 mkdir -p $SRC/fuzzers/wolfssl/
 cp -R $SRC/wolfssl/ $SRC/fuzzers/wolfssl/
@@ -9,7 +11,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
 fi
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
-export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation  --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp --enable-dtls13 --enable-dtlscid --enable-dsa --enable-sslv3"
+export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp --enable-dtls13 --enable-dtlscid --enable-dsa --enable-sslv3"
 
 # Build everything with -fsanitize=fuzzer-no-link (normal code coverage guided fuzzing)
     # Build wolfSSL
@@ -53,16 +55,16 @@ export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 -
         fi
 
         if [[ "$OSS_FUZZ_BUILD" -eq "1" ]]; then
-            zip $OUT/fuzzer-wolfssl-client_seed_corpus.zip corp-client/*
-            zip $OUT/fuzzer-wolfssl-client-randomize_seed_corpus.zip corp-client-rand/*
-            zip $OUT/fuzzer-wolfssl-server_seed_corpus.zip corp-server/*
-            zip $OUT/fuzzer-wolfssl-server-randomize_seed_corpus.zip corp-server-rand/*
-            zip $OUT/fuzzer-wolfssl-misc_seed_corpus.zip corp-misc/*
-            zip $OUT/fuzzer-wolfssl-crl_seed_corpus.zip corp-crl/*
-            zip $OUT/fuzzer-wolfssl-ocsp_seed_corpus.zip corp-ocsp/*
-            zip $OUT/fuzzer-wolfssl-x509_seed_corpus.zip corp-x509/*
-            zip $OUT/fuzzer-wolfssl-rsa_seed_corpus.zip corp-rsa/*
-            zip $OUT/fuzzer-wolfssl-srp_seed_corpus.zip corp-srp/*
+            zip $OUT/fuzzer-wolfssl-client_seed_corpus.zip corp-client/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-client-randomize_seed_corpus.zip corp-client-rand/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-server_seed_corpus.zip corp-server/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-server-randomize_seed_corpus.zip corp-server-rand/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-misc_seed_corpus.zip corp-misc/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-crl_seed_corpus.zip corp-crl/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-ocsp_seed_corpus.zip corp-ocsp/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-x509_seed_corpus.zip corp-x509/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-rsa_seed_corpus.zip corp-rsa/* >/dev/null
+            zip $OUT/fuzzer-wolfssl-srp_seed_corpus.zip corp-srp/* >/dev/null
         else
             cp -R corp-client/ $OUT/corp-wolfssl-client/
             cp -R corp-server/ $OUT/corp-wolfssl-server/

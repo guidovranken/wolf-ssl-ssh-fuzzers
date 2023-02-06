@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+set -e
+
 rm -rf $SRC/fuzzers/wolfssh/
 mkdir -p $SRC/fuzzers/wolfssh/
 cp -R $SRC/wolfssh/ $SRC/fuzzers/wolfssh/
@@ -47,10 +49,10 @@ export ORIGINAL_CFLAGS="$CFLAGS"
         fi
 
         if [[ "$OSS_FUZZ_BUILD" -eq "1" ]]; then
-            zip $OUT/fuzzer-wolfssh-client_seed_corpus.zip corp-client/*
-            zip $OUT/fuzzer-wolfssh-client-randomize_seed_corpus.zip corp-client-rand/*
-            zip $OUT/fuzzer-wolfssh-server_seed_corpus.zip corp-server/*
-            zip $OUT/fuzzer-wolfssh-server-randomize_seed_corpus.zip corp-server/*
+            zip $OUT/fuzzer-wolfssh-client_seed_corpus.zip corp-client/* >/dev/null
+            #zip $OUT/fuzzer-wolfssh-client-randomize_seed_corpus.zip corp-client-rand/* >/dev/null
+            zip $OUT/fuzzer-wolfssh-server_seed_corpus.zip corp-server/* >/dev/null
+            zip $OUT/fuzzer-wolfssh-server-randomize_seed_corpus.zip corp-server/* >/dev/null
         else
             cp -R corp-client/ $OUT/corp-wolfssh-client/
             cp -R corp-server/ $OUT/corp-wolfssh-server/
