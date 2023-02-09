@@ -49,4 +49,9 @@ fi
 
 # Build wolfSSH + fuzzers
     # Build wolfSSH + wolfSSL + fuzzers
-    /bin/bash $SRC/build_wolfssh_fuzzers.sh
+
+    # 32 bit build temporary disabled until https://github.com/wolfSSL/wolfssh/issues/493 is fixed
+    if [[ $CFLAGS != *-m32* ]]
+    then
+        /bin/bash $SRC/build_wolfssh_fuzzers.sh
+    fi
