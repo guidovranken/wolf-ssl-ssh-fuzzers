@@ -11,7 +11,7 @@ if [[ "$OSS_FUZZ_BUILD" -eq "0" ]]; then
 fi
 
 export CFLAGS="$CFLAGS -DWOLFSSL_STATIC_PSK"
-export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp --enable-dtls13 --enable-dtlscid --enable-dsa --enable-sslv3"
+export WOLFSSL_CONFIGURE_PARAMS="$WOLFSSL_BASE_CONFIGURE_PARAMS --enable-tls13 --enable-ocsp --enable-dtls --enable-sni --enable-blake2 --enable-blake2s --enable-curve25519 --enable-session-ticket --enable-nullcipher --enable-crl --enable-ed25519 --enable-psk --enable-earlydata --enable-postauth --enable-hrrcookie --enable-opensslextra --enable-certext --enable-tlsx --enable-oldtls --enable-tlsv10 --enable-indef --enable-psk --enable-ecccustcurves=all --enable-secure-renegotiation --enable-curve25519 --enable-curve448 --enable-ed25519 --enable-ed448 --enable-ocspstapling --enable-srp --enable-dtls13 --enable-dtlscid --enable-dsa --enable-sslv3 --enable-asn=original --enable-opensslall"
 
 # Build everything with -fsanitize=fuzzer-no-link (normal code coverage guided fuzzing)
     # Build wolfSSL

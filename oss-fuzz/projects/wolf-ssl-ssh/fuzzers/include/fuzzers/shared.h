@@ -44,6 +44,9 @@
  */
 #define BADPTR ((void*)0x12)
 
+#if defined(WRITE_RAND)
+static FILE* fp_rand_input = NULL;
+#endif
 static FILE* fp_dev_null = NULL;
 
 /* libFuzzer-supplied input data */
@@ -168,6 +171,12 @@ static int randomize_allocation_result(void) {
             return 0;
         }
     } else {
+#if defined(WRITE_RAND)
+        if ( fp_rand_input != NULL ) {
+            static const uint8_t choice = 1;
+            fwrite(&choice, sizeof(choice), 1, fp_rand_input);
+        }
+#endif
         /* No IO randomization -- allocations always succeed */
         return 1;
     }
@@ -293,6 +302,15 @@ void memory_test(const void* p, const size_t size)
                     }
             }
         } else {
+#if defined(WRITE_RAND)
+        if ( fp_rand_input != NULL ) {
+            static const uint8_t io_error = 0xFE;
+            fwrite(&io_error, sizeof(io_error), 1, fp_rand_input);
+
+            uint32_t _sz = sz;
+            fwrite(&_sz, sizeof(_sz), 1, fp_rand_input);
+        }
+#endif
             /* Regular write -- emulate a full write */
             return sz;
         }
@@ -376,6 +394,18 @@ void memory_test(const void* p, const size_t size)
 
             memcpy(buf, fuzzer_data, numRead);
 
+#if defined(WRITE_RAND)
+        if ( fp_rand_input != NULL ) {
+            static const uint8_t io_error = 0xFE;
+            fwrite(&io_error, sizeof(io_error), 1, fp_rand_input);
+
+            uint32_t sz = numRead;
+            fwrite(&sz, sizeof(sz), 1, fp_rand_input);
+
+            fwrite(fuzzer_data, numRead, 1, fp_rand_input);
+        }
+#endif
+
             fuzzer_data += numRead;
             fuzzer_data_size -= numRead;
 
@@ -407,9 +437,6 @@ void memory_test(const void* p, const size_t size)
 
         for (int i = 1; i < argc; i++) {
             if ( argv[i][0] == '-' && argv[i][1] == '-' ) {
-#if defined(OSS_FUZZ_BUILD_RANDOMIZE)
-                enable_io_randomization();
-#else
                 if ( !strcmp(argv[i], "--randomize-io") ) {
                     enable_io_randomization();
                 } else if ( !strcmp(argv[i], "--randomize-alloc") ) {
@@ -418,7 +445,6 @@ void memory_test(const void* p, const size_t size)
                     printf("Invalid parameter: %s\n", argv[i]);
                     exit(0);
                 }
-#endif
             }
         }
     }
@@ -427,6 +453,7 @@ void memory_test(const void* p, const size_t size)
         for (int i = 1; i < argc; i++) {
 #if defined(OSS_FUZZ_BUILD_RANDOMIZE)
             enable_allocation_randomization();
+            enable_io_randomization();
 #else
             if ( !strcmp(argv[i], "--randomize-alloc") ) {
                 enable_allocation_randomization();

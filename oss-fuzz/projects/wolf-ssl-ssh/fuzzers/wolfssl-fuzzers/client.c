@@ -42,6 +42,19 @@ FUZZER_INITIALIZE_HEADER
             abort();
         }
         /* noret */ wolfSSL_CTX_set_psk_client_callback(ctx[i], psk_cb);
+
+        char* sniHostName = "X";
+        if (wolfSSL_CTX_UseSNI(
+                    ctx[i],
+                    WOLFSSL_SNI_HOST_NAME,
+                    sniHostName,
+                    (word16) XSTRLEN(sniHostName)) != WOLFSSL_SUCCESS) {
+            abort();
+        }
+        wolfSSL_CTX_set_verify(ctx[i], WOLFSSL_VERIFY_NONE, NULL);
+        if (wolfSSL_CTX_EnableOCSPStapling(ctx[i]) != WOLFSSL_SUCCESS) {
+            abort();
+        }
     }
 }
 FUZZER_INITIALIZE_FOOTER_1
@@ -60,11 +73,31 @@ FUZZER_RUN_HEADER
         return 0;
     }
 
+    /* Define WRITE_RAND to write inputs from the non-rand client fuzzer
+     * to corp-client-rand/ in the format that the rand client fuzzer uses.
+     */
+#if defined(WRITE_RAND)
+    static int input_idx;
+    input_idx++;
+    char input_filename[4096];
+    sprintf(input_filename, "corp-client-rand/%d", input_idx);
+    fp_rand_input = fopen(input_filename, "wb");
+    if ( fp_rand_input == NULL ) {
+        printf("Cannot open for writing\n");
+        abort();
+    }
+#endif
+
     WOLFSSL* ssl;
 
     fuzzer_set_data(data, size);
 
     if ( (ssl = wolfSSL_new(ctx[ctxIdx])) == NULL) {
+        goto end;
+    }
+
+    if (wolfSSL_UseOCSPStapling(ssl, WOLFSSL_CSR_OCSP,
+                WOLFSSL_CSR_OCSP_USE_NONCE) != WOLFSSL_SUCCESS) {
         goto end;
     }
 
@@ -75,6 +108,10 @@ end:
     wolfSSL_free(ssl);
 
     fuzzer_unset_data();
-
+#if defined(WRITE_RAND)
+    fwrite(&ctxIdx, sizeof(ctxIdx), 1, fp_rand_input);
+    fclose(fp_rand_input);
+    fp_rand_input = NULL;
+#endif
 }
 FUZZER_RUN_FOOTER
