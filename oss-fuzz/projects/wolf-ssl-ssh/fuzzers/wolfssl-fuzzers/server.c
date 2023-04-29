@@ -81,6 +81,8 @@ FUZZER_RUN_HEADER
             int n;
             char buf[4096];
             if ( (n = wolfSSL_read(ssl, buf, (sizeof(buf) -1))) > 0) { }
+            memset(buf, 0, sizeof(buf));
+            if ( (n = wolfSSL_write(ssl, buf, sizeof(buf))) > 0 ) { }
         }
 
         /* noret */ wc_ClearErrorNodes();
