@@ -106,6 +106,7 @@ FUZZER_RUN_HEADER
 end:
     /* noret */ wc_ClearErrorNodes();
     wolfSSL_free(ssl);
+    wolfSSL_Cleanup();
 
     fuzzer_unset_data();
 #if defined(WRITE_RAND)
