@@ -5,6 +5,7 @@
 #include <wolfssl/wolfcrypt/curve448.h>
 #include <wolfssl/wolfcrypt/ed448.h>
 #include <wolfssl/wolfcrypt/ed25519.h>
+#include <wolfssl/wolfcrypt/pkcs7.h>
 #include <fuzzers/shared.h>
 
 FUZZER_INITIALIZE_HEADER
@@ -19,7 +20,6 @@ FUZZER_RUN_HEADER
 
     const uint8_t choice = *data;
     data++; size--;
-
 
     switch ( choice ) {
         case    0:
@@ -248,6 +248,19 @@ FUZZER_RUN_HEADER
                 if ( wc_ecc_init(&key) == 0 ) {
                     wc_ecc_import_private_key(data, size, NULL, 0, &key);
                     wc_ecc_free(&key);
+                }
+            }
+            break;
+        case    16:
+            {
+                PKCS7* pkcs7 =  wc_PKCS7_New(NULL, -1);
+                if ( pkcs7 != NULL ) {
+                    if ( wc_PKCS7_InitWithCert(pkcs7, (unsigned char*)data, size) == 0 ) {
+                        uint8_t output[1024];
+                        if ( wc_PKCS7_EncodeData(pkcs7, output, sizeof(output)) > 0 ) {
+                        }
+                    }
+                    wc_PKCS7_Free(pkcs7);
                 }
             }
             break;
